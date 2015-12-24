@@ -1,70 +1,70 @@
-<!doctype html>
-<html lang="en" data-framework="angularjs">
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/index.css">
-    <style>[ng-cloak] {
-        display: none;
-    }</style>
+    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name=description content="">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script src="../bower_components/angular/angular.js"></script>
+    <style>
+        .status-true {
+            text-decoration: line-through;
+        }
+    </style>
 </head>
-<body ng-app="todomvc">
-<ng-view/>
-<script type="text/ng-template" id="todomvc-index.html">
-    <section id="todoapp">
-        <header id="header">
+<body ng-controller="myController">
 
-            <form id="todo-form" ng-submit="addTodo()">
-                <input id="new-todo" placeholder="Enter Todo List" ng-model="newTodo" ng-disabled="saving" autofocus>
-            </form>
-        </header>
-        <section id="main" ng-show="todos.length" ng-cloak>
-            <input id="toggle-all" type="checkbox" ng-model="allChecked" ng-click="markAll(allChecked)">
-            <label for="toggle-all">Mark all as complete</label>
-            <ul id="todo-list">
-                <li ng-repeat="todo in todos | filter:statusFilter track by $index"
-                    ng-class="{completed: todo.completed, editing: todo == editedTodo}">
-                    <div class="view">
-                        <input class="toggle" type="checkbox" ng-model="todo.completed"
-                               ng-change="toggleCompleted(todo)">
-                        <label ng-dblclick="editTodo(todo)">{{todo.title}}</label>
-                        <button class="destroy" ng-click="removeTodo(todo)"></button>
-                    </div>
-                    <form ng-submit="saveEdits(todo, 'submit')">
-                        <input class="edit" ng-trim="false" ng-model="todo.title" todo-escape="revertEdits(todo)"
-                               ng-blur="saveEdits(todo, 'blur')" todo-focus="todo == editedTodo">
-                    </form>
-                </li>
-            </ul>
-        </section>
-        <footer id="footer" ng-show="todos.length" ng-cloak>
-							<span id="todo-count"><strong>{{remainingCount}}</strong>
-									<ng-pluralize count="remainingCount"
-                                                  when="{ one: 'item left', other: 'items left' }"></ng-pluralize>
-							</span>
-            <ul id="filters">
-                <li>
-                    <a ng-class="{selected: status == ''} " href="#/">All</a>
-                </li>
-                <li>
-                    <a ng-class="{selected: status == 'active'}" href="#/active">Active</a>
-                </li>
-                <li>
-                    <a ng-class="{selected: status == 'completed'}" href="#/completed">Completed</a>
-                </li>
-            </ul>
-            <button id="clear-completed" ng-click="clearCompletedTodos()" ng-show="completedCount">Clear completed
-            </button>
-        </footer>
-    </section>
+<h1 class="text-center">My todo list</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">You got {{totalThings()}} things todo</h3>
+            </div>
+            <div class="panel-body">
+                <ol>
+                    <li ng-repeat="x in todos"><input type="checkbox" ng-model="x.status"/> <span
+                            class="status-{{x.status}}">{{x.data}}</span></li>
+                </ol>
+                <input type="text" class="form-control" name="todoInput" ng-model="todoInput">
+                <br/>
+
+                <div class="btn-group  pull-right">
+                    <button type="button" class="btn btn-success" ng-click="save()">Add</button>
+                    <button type="button" class="btn btn-infor" ng-click="clear()">Clear</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myController', function ($scope) {
+        $scope.todos = [];
+        $scope.save = function () {
+            $scope.todos.push({data: $scope.todoInput, status: false});
+            $scope.todoInput = '';
+        };
+        $scope.clear = function () {
+            var x;
+
+            for (x in $scope.todos) {
+                if ($scope.todos[x].status) {
+                    $scope.todos.splice($scope.todos.indexOf(x), 1);
+                }
+            }
+        };
+        $scope.totalThings = function () {
+            return $scope.todos.length;
+        };
+    });
+
 </script>
-<script src="assets/js/base.js"></script>
-<script src="../bower_components/angular/angular.js"></script>
-<script src="../bower_components/angular-route/angular-route.js"></script>
-<script src="modules/app.js"></script>
-<script src="modules/controllers/todoCtrl.js"></script>
-<script src="modules/services/todoStorage.js"></script>
-<script src="modules/directives/todoFocus.js"></script>
-<script src="modules/directives/todoEscape.js"></script>
 </body>
 </html>
